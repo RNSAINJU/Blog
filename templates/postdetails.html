@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %} Home {% endblock %}
+{% block content %}
+
+
+<!--    {% if user.is_authenticated %}-->
+<!--        <h3>Hello {{ user.username }} </h3>-->
+
+<!--    {% else%}-->
+<!--    <h3>Hello guest </h3>-->
+<!--    {% endif %}-->
+<div class="container">
+
+
+    <h1>{{ post.title }}</h1>
+    <h3>{{ post.created_at }}</h3>
+    <h3>{{ post.created_by }}</h3>
+
+    <img src="{{ post.image.url }}" width="1000px" height="800px">
+    <p>{{ post.description }}</p>
+
+
+    <h2>Comments</h2>
+    {% for obj in comments %}
+    <h3>{{ obj.message }}</h3>
+    <h6>Created at:{{ obj.created_at }}</h6>
+    <h6>Last updated:{{ obj.update_at }}</h6>
+    <h6>Created by: {{ obj.created_by }}</h6>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Submit</button>
+    </form>
+
+    {% else %}
+
+    <div class="mt-2">
+        Need to <a href="{% url 'login' %}">login</a> or <a href="{% url 'signup' %}">Create account</a>  to write comment
+    </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %} Home {% endblock %}
+{% block content %}
+
+<div class="container mb-5">
+    {% for obj in posts %}
+    <h1><a href="{% url 'post_detail' slug=obj.slug %}">{{ obj.title }}</a></h1>
+    <img src="{{ obj.image.url }}" width="100px" height="80px">
+    <h3>{{ obj.created_at }}</h3>
+    <h3>{{ obj.created_by }}</h3>
+    {% endfor %}
+</div>
+{% endblock %}
