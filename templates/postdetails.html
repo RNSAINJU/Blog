@@ -13,19 +13,16 @@
 
 
     <h1>{{ post.title }}</h1>
-    <h3>{{ post.created_at }}</h3>
-    <h3>{{ post.created_by }}</h3>
+    <h3>{{ post.created_by }} | {{ post.created_at }}</h3>
 
     <img src="{{ post.image.url }}" width="1000px" height="800px">
     <p>{{ post.description }}</p>
 
 
-    <h2>Comments</h2>
+    <h2>Comments : {{ post.get_comment_count }}</h2>
     {% for obj in comments %}
     <h3>{{ obj.message }}</h3>
-    <h6>Created at:{{ obj.created_at }}</h6>
-    <h6>Last updated:{{ obj.update_at }}</h6>
-    <h6>Created by: {{ obj.created_by }}</h6>
+    <p>{{ obj.created_by }} | {{ obj.created_at }}</h6>
     {% endfor %}
 
     {% if user.is_authenticated %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %} All blogs {% endblock %}
+
+{% block content %}
+<div class="container mb-5">
+	<div class="col-md-8">
+	<h2>All blogs </h2>
+    {% for obj in posts %}
+    	{% for cat in obj.categories.all %}
+    		<a href="#">{{ cat }}</a>
+    	{% endfor %}
+    <h1><a href="{% url 'post_detail' slug=obj.slug %}">{{ obj.title }}</a></h1>
+    <img src="{{ obj.image.url }}" width="100px" height="80px">
+    <p>{{ obj.created_by }} | {{ obj.created_at }} | {{ obj.get_comment_count }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-4">
+    	<h2>Search</h2>
+    	<h2>Latest posts</h2>
+    	<h2>Categories</h2>
+    </div>
+</div>
+
+
+{% endblock %}

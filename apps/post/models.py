@@ -43,17 +43,33 @@ class Post(models.Model):
 		)
 	title=models.CharField(max_length=30,unique=True)
 	description=models.TextField(max_length=4000)
-	category=models.ForeignKey(Category, related_name='posts',on_delete=models.CASCADE)
+	categories=models.ManyToManyField(Category)
 	image=models.ImageField(upload_to=upload_image_path,null=True,blank=False)
 	created_at=models.DateTimeField(auto_now=False,auto_now_add=True)
 	created_by=models.ForeignKey(User,related_name='posts',on_delete=models.CASCADE)
-	# last_updated=models.DateTimeField(auto_now_add=True)
 	slug=models.SlugField(max_length=100,unique=True,blank=True)
 	status=models.CharField(max_length=50, choices=STATUS_CHOICES)
 	views=models.PositiveIntegerField(default=0)
+	featured=models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.title
+
+	def get_comment_count(self):
+		return Comment.objects.filter(post=self).count()
+
+	# def get_page_count(self):
+	# 	count=self.count()
+	# 	pages= count/5
+	# 	return math.ceil(pages)
+
+	# def get_page_range(self):
+	# 	count=self.get_page_count()
+	# 	if self.has_many_pages(count):
+	# 		return range(1,5)
+	# 	return range(1, count+1)
+	
+
 
 	def save(self, *args, **kwargs):
 		self.slug=slugify(self.title)
@@ -63,12 +79,8 @@ class Comment(models.Model):
 	message=models.TextField(max_length=4000)
 	post=models.ForeignKey(Post,related_name='posts',on_delete=models.CASCADE)
 	created_at=models.DateTimeField(auto_now_add=True)
-	update_at=models.DateTimeField(null=True)
 	created_by=models.ForeignKey(User, related_name='comments',on_delete=models.CASCADE)
 
-# def __str__(self):
-    #     truncated_message= Truncator(self.message)
-    #     return truncated_message.chars(30)
 
     # def get_message_as_markdown(self):
     #     return mark_safe(markdown(self.message,safe_mode='escape'))

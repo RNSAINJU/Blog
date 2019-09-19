@@ -18,14 +18,15 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
-from apps.post.views import PostListView, PostDetailView
+from apps.post.views import PostListView, PostDetailView, AllPostsListVew
 from apps.accounts.views import login_view, signup_view, logout_view, UserUpdateView
 from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$',PostListView.as_view(), name='home'),
-    path('post/<slug>/',PostDetailView.as_view(), name='post_detail'),
+    url(r'^blog/$', AllPostsListVew.as_view(), name='blog'),
+    path('blog/<slug>/',PostDetailView.as_view(), name='post_detail'),
     url(r'^login/$', login_view, name='login'),
     url(r'^signup/$', signup_view, name='signup'),
     url(r'^logout/$', logout_view, name='logout'),

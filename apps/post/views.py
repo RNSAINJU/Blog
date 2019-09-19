@@ -11,10 +11,11 @@ class PostListView(ListView):
     context_object_name = 'posts'
     template_name = 'index.html'
 
-    # def get_queryset(self):
-    #     post=Post.objects.all().order_by('id')
-    #     queryset={'posts':posts}
-    #     return queryset
+    def get_queryset(self):
+        post=Post.objects.filter(featured=True)
+        latest=Post.objects.order_by('-created_at')[0:3]
+        queryset={'post':post,'latest':latest}
+        return queryset
 
 class PostDetailView(TemplateView):
 
@@ -36,6 +37,17 @@ class PostDetailView(TemplateView):
                     post=post,
                     created_by=self.request.user
                 )
+                # comments=Comment.objects.filter(post=post).count()
+                # Post.objects.update(
+                #     comment_count = comments
+                #     )
+
         else:
             print("Need to login")
         return redirect('post_detail' ,slug=slug)
+
+class AllPostsListVew(ListView):
+    model=Post
+    context_object_name='posts'
+    template_name='blog.html'
+    paginate_by=5
