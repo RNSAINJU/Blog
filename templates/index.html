@@ -2,10 +2,12 @@
 {% block title %} Home {% endblock %}
 {% block content %}
 
-
-<div class="container mb-5">
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+<div class="mb-5">
 	<h2>Featured </h2>
-    {% for obj in posts.post %}
+    {% for obj in featured %}
     	{% for cat in obj.categories.all %}
     		<a href="#">{{ cat }}</a>
     	{% endfor %}
@@ -16,9 +18,9 @@
 </div>
 
 
-<div class="container mb-5">
+<div class="mb-5">
 	<h2>Latest </h2>
-    {% for obj in posts.latest %}
+    {% for obj in latest %}
     	{% for cat in obj.categories.all %}
     		<a href="#">{{ cat }}</a>
     	{% endfor %}
@@ -26,5 +28,12 @@
     <img src="{{ obj.image.url }}" width="100px" height="80px">
     <p>{{ obj.created_by }} | {{ obj.created_at }} | {{ obj.get_comment_count }}</p>
         {% endfor %}
+
+
 </div>
+            </div>
+
+        {% include 'tools/sidebar.html' %}
+</div>
+    </div>
 {% endblock %}

@@ -16,21 +16,27 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.urls import include
 from django.contrib.auth import views as auth_views
 from django.urls import path
-from apps.post.views import PostListView, PostDetailView, AllPostsListVew
+from apps.post.views import IndexView, post_detail, PostsListView, search, PostCreateView, PostUpdateView, PostDeleteView
 from apps.accounts.views import login_view, signup_view, logout_view, UserUpdateView
 from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^$',PostListView.as_view(), name='home'),
-    url(r'^blog/$', AllPostsListVew.as_view(), name='blog'),
-    path('blog/<slug>/',PostDetailView.as_view(), name='post_detail'),
+    url(r'^$',IndexView.as_view(), name='home'),
+    url(r'^blog/$', PostsListView.as_view(), name='blog'),
+    path('create/',PostCreateView.as_view(), name='post_create'),
+    path('blog/<slug>/',post_detail, name='post_detail'),
+    path('blog/<slug>/update',PostUpdateView.as_view(), name='post_update'),
+    path('blog/<slug>/delete',PostDeleteView.as_view(), name='post_delete'),
+    path('search/',search, name='search'),
     url(r'^login/$', login_view, name='login'),
     url(r'^signup/$', signup_view, name='signup'),
     url(r'^logout/$', logout_view, name='logout'),
     url(r'^myaccount/$', UserUpdateView.as_view(), name='my_account'),
+    # path(r'^accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:

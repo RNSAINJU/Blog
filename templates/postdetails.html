@@ -2,28 +2,35 @@
 {% block title %} Home {% endblock %}
 {% block content %}
 
-
-<!--    {% if user.is_authenticated %}-->
-<!--        <h3>Hello {{ user.username }} </h3>-->
-
-<!--    {% else%}-->
-<!--    <h3>Hello guest </h3>-->
-<!--    {% endif %}-->
 <div class="container">
 
+<div class="row">
+    <div class="col-md-8">
+            <img src="{{ post.image.url }}" width="100%" height="400px">
+        {% for cat in post.categories.all %}
+    		<a href="#">{{ cat }}</a>
+    	{% endfor %}
 
+        {% if user.is_superuser %}
+        <div>
+            <a href="{% url 'post_update' slug=post.slug %}">Update</a>
+            <a href="{% url 'post_delete' slug=post.slug %}">Delete</a>
+        </div>
+        {% endif %}
     <h1>{{ post.title }}</h1>
     <h3>{{ post.created_by }} | {{ post.created_at }}</h3>
 
-    <img src="{{ post.image.url }}" width="1000px" height="800px">
+
     <p>{{ post.description }}</p>
 
 
     <h2>Comments : {{ post.get_comment_count }}</h2>
-    {% for obj in comments %}
-    <h3>{{ obj.message }}</h3>
-    <p>{{ obj.created_by }} | {{ obj.created_at }}</h6>
+        <h2>Views:{{ post.view_count }}</h2>
+    {% for comment in post.get_comments %}
+    <h3>{{ comment.message }}</h3>
+    <p>{{ comment.created_by }} | {{ comment.created_at }}</h6>
     {% endfor %}
+
 
     {% if user.is_authenticated %}
     <form method="post">
@@ -40,5 +47,10 @@
 
     {% endif %}
 
+    </div>
+
+    {% include 'tools/sidebar.html' %}
+
+</div>
 </div>
 {% endblock %}

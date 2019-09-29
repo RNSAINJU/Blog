@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Category, Comment
+from .models import Post, Category, Comment,PostView
 
 class InLineLesson(admin.TabularInline):
     model = Comment
@@ -8,7 +8,7 @@ class InLineLesson(admin.TabularInline):
 
 class PostAdmin(admin.ModelAdmin):
     inlines = [InLineLesson]
-    list_display = ('title','created_at','created_by','views','status')
+    list_display = ('title','created_at','created_by','status')
     list_editable = ('status',)
     list_filter = ('created_at','created_by')
     search_fields = ('title',)
@@ -20,4 +20,5 @@ class CommentAdmin(admin.ModelAdmin):
 admin.site.register(Post,PostAdmin)
 admin.site.register(Category)
 admin.site.register(Comment,CommentAdmin)
+admin.site.register(PostView)
 

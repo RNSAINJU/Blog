@@ -11,7 +11,11 @@
       <a class="nav-link" href="{% url 'blog' %}">Blog</a>
     </li>
 
-
+{% if user.is_staff %}
+          <li class="nav-item">
+      <a class="nav-link" href="{% url 'post_create' %}">Create</a>
+    </li>
+      {% endif %}
 
 {% if user.is_authenticated %}
     <li class="nav-item dropdown">
@@ -38,6 +42,13 @@
     {% endif %}
 
   </ul>
+
+    <form action="{% url 'search' %}">
+        <div class="form-group">
+            <input type="search" name="q" id="search" placeholder="What are you looking for?">
+            <button type="submit" class="submit"><i class="icon-search-1"></i></button>
+        </div>
+    </form>
 </nav>
 
 <br>

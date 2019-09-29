@@ -3,7 +3,8 @@ from django.utils.text import slugify
 from django.contrib.auth.models import User
 import os
 import random
-
+from django.urls import reverse
+# from tinymce import HTMLField
 # from django.utils.html import mark_safe
 # from markdown import markdown
 # from django.utils.text import Truncator
@@ -49,38 +50,54 @@ class Post(models.Model):
 	created_by=models.ForeignKey(User,related_name='posts',on_delete=models.CASCADE)
 	slug=models.SlugField(max_length=100,unique=True,blank=True)
 	status=models.CharField(max_length=50, choices=STATUS_CHOICES)
-	views=models.PositiveIntegerField(default=0)
 	featured=models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.title
 
-	def get_comment_count(self):
-		return Comment.objects.filter(post=self).count()
+	def get_absolute_url(self):
+		return reverse('post_detail',kwargs={
+			'slug':self.slug
+		})
 
-	# def get_page_count(self):
-	# 	count=self.count()
-	# 	pages= count/5
-	# 	return math.ceil(pages)
+	def get_update_url(self):
+		return reverse('post-update',kwargs={
+			'slug':self.slug
+		})
 
-	# def get_page_range(self):
-	# 	count=self.get_page_count()
-	# 	if self.has_many_pages(count):
-	# 		return range(1,5)
-	# 	return range(1, count+1)
-	
+	def get_delete_url(self):
+		return reverse('post-delete',kwargs={
+			'slug':self.slug
+		})
+
 
 
 	def save(self, *args, **kwargs):
 		self.slug=slugify(self.title)
 		super(Post,self).save(*args,**kwargs)
 
+	@property
+	def get_comments(self):
+		return self.comments.all().order_by('-created_at')
+
+	@property
+	def get_comment_count(self):
+		return Comment.objects.filter(post=self).count()
+
+	@property
+	def view_count(self):
+		return PostView.objects.filter(post=self).count()
+
 class Comment(models.Model):
 	message=models.TextField(max_length=4000)
-	post=models.ForeignKey(Post,related_name='posts',on_delete=models.CASCADE)
+	post=models.ForeignKey('Post',related_name='comments',on_delete=models.CASCADE)
 	created_at=models.DateTimeField(auto_now_add=True)
-	created_by=models.ForeignKey(User, related_name='comments',on_delete=models.CASCADE)
+	created_by=models.ForeignKey(User, on_delete=models.CASCADE)
 
+class PostView(models.Model):
+	user=models.ForeignKey(User,on_delete=models.CASCADE)
+	post=models.ForeignKey('Post',on_delete=models.CASCADE)
 
-    # def get_message_as_markdown(self):
-    #     return mark_safe(markdown(self.message,safe_mode='escape'))
+	def __str__(self):
+		return self.user.username
+
